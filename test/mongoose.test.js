@@ -8,8 +8,6 @@ const mongoURI = 'mongodb://localhost:27017/test_db';
 before(async function() {
   // Connect to MongoDB
   await mongoose.connect(mongoURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
   });
 });
 
