@@ -11,10 +11,6 @@ describe('Mongoose Discriminators', () => {
          { discriminatorKey: 'kind', _id: false }
       )
 
-      const trackSchema = new Schema({
-         event: eventSchema
-      })
-
       const clickedSchema = new Schema({
          element: String
       }, { _id: false })
@@ -75,8 +71,12 @@ describe('Mongoose Discriminators', () => {
 
       // Register the discriminators
 
-      trackSchema.path('event').discriminator('Clicked', clickedSchema)
-      trackSchema.path('event').discriminator('Purchased', purchasedSchema)
+      eventSchema.discriminator('Clicked', clickedSchema)
+      eventSchema.discriminator('Purchased', purchasedSchema)
+
+      const trackSchema = new Schema({
+         event: eventSchema
+      })
 
       // Test
 
