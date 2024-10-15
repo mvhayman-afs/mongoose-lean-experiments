@@ -5,13 +5,13 @@ const assert = require('assert');
 // MongoDB connection URI (replace with your local MongoDB URI)
 const mongoURI = 'mongodb://localhost:27017/test_db';
 
-before(async function() {
+beforeEach(async function() {
   // Connect to MongoDB
   await mongoose.connect(mongoURI, {
   });
 });
 
-after(async function() {
+afterEach(async function() {
   // Disconnect from MongoDB
   await mongoose.disconnect();
 });
@@ -19,7 +19,7 @@ after(async function() {
 describe('Mongoose Schema Test', function() {
   let TestModel;
 
-  before(function() {
+  beforeEach(function() {
     // Define a simple schema
     const testSchema = new Schema({
       name: String,
