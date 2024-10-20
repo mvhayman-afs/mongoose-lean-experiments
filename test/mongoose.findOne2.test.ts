@@ -1,7 +1,7 @@
 import mongoose, { Types, GetLeanResultType } from 'mongoose';
-import { Person } from '../src/models/person';
+import { Person, RawPersonDocType } from '../src/models/person';
 import { Pet } from '../src/models/pet';
-import { PersonObject, PetObject } from '../src/interfaces/mongoose.gen';
+import { IsPopulated, PersonDocument, PersonObject, PetObject, PopulatedDocument } from '../src/interfaces/mongoose.gen';
 
 // MongoDB connection URI (replace with your local MongoDB URI)
 const mongoURI = 'mongodb://localhost:27017/test_db';
@@ -41,7 +41,7 @@ it('should save a document to MongoDB', async () => {
 
   const objectDoc = person.toObject();
 
-  const hydratedDoc = await Person.findOne({ _id: _id }).populate('pets', 'name').orFail();
+  const hydratedDoc = await Person.findOne({ _id: _id }).populate('pets', 'age').orFail();
 
   console.log('hydrated doc pets', hydratedDoc.pets, hydratedDoc.pets[0].age);
 
@@ -49,17 +49,32 @@ it('should save a document to MongoDB', async () => {
 
   console.log('hydrated doc without pets', hydratedDocWithoutPets.pets, hydratedDocWithoutPets.pets[0].age);
 
-  class LeanPet extends PetObject {}
+  // class LeanPet extends PetObject {}
 
-  const leanDoc = await Person.findOne({ _id: _id }).populate<{ pets: PetObject }>('pets').orFail().lean<PersonObject>({ virtuals: true });
+  const leanDoc = await Person.findOne({ _id: _id }).populate('pets').orFail().lean({ virtuals: true });
 
   if (!(leanDoc.pets[0] instanceof Types.ObjectId)) {
     console.log('NOT INSTANCE', leanDoc.pets[0].age);
   }
 
-  if ((leanDoc.pets[0] instanceof Types.ObjectId)) {
-    console.log('NOT INSTANCE', leanDoc.pets[0].age);
+  if (IsPopulated(leanDoc.pets)) {
+    console.log('POPULATED', leanDoc.pets[0].age);
   }
+
+  if (IsPopulated(hydratedDoc.pets)) {
+    console.log('POPULATED', hydratedDoc.pets[0].age);
+  }
+
+  function safeType(person: PopulatedDocument<PersonDocument, "pets">) {
+    console.log(person.pets[0].age)
+  }
+
+  console.log('hydrated doc');
+  safeType(hydratedDoc);
+  console.log('hydrated doc w/o pets');
+  safeType(hydratedDocWithoutPets);
+  console.log('lean doc');
+  safeType(leanDoc);
 
   /*
   console.log('**leaned', leanDoc._id, leanDoc.pets[0].age);
