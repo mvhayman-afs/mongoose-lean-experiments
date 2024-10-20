@@ -8,6 +8,188 @@
 import mongoose from "mongoose";
 
 /**
+ * Lean version of PersonDocument
+ *
+ * This has all Mongoose getters & functions removed. This type will be returned from `PersonDocument.toObject()`. To avoid conflicts with model names, use the type alias `PersonObject`.
+ * ```
+ * const personObject = person.toObject();
+ * ```
+ */
+export type Person = {
+  name: string;
+  age: number;
+  pet_ids: mongoose.Types.ObjectId[];
+  _id: mongoose.Types.ObjectId;
+};
+
+/**
+ * Lean version of PersonDocument (type alias of `Person`)
+ *
+ * Use this type alias to avoid conflicts with model names:
+ * ```
+ * import { Person } from "../models"
+ * import { PersonObject } from "../interfaces/mongoose.gen.ts"
+ *
+ * const personObject: PersonObject = person.toObject();
+ * ```
+ */
+export type PersonObject = Person;
+
+/**
+ * Mongoose Query type
+ *
+ * This type is returned from query functions. For most use cases, you should not need to use this type explicitly.
+ */
+export type PersonQuery = mongoose.Query<any, PersonDocument, PersonQueries> &
+  PersonQueries;
+
+/**
+ * Mongoose Query helper types
+ *
+ * This type represents `PersonSchema.query`. For most use cases, you should not need to use this type explicitly.
+ */
+export type PersonQueries = {};
+
+export type PersonMethods = {};
+
+export type PersonStatics = {};
+
+/**
+ * Mongoose Model type
+ *
+ * Pass this type to the Mongoose Model constructor:
+ * ```
+ * const Person = mongoose.model<PersonDocument, PersonModel>("Person", PersonSchema);
+ * ```
+ */
+export type PersonModel = mongoose.Model<PersonDocument, PersonQueries> &
+  PersonStatics;
+
+/**
+ * Mongoose Schema type
+ *
+ * Assign this type to new Person schema instances:
+ * ```
+ * const PersonSchema: PersonSchema = new mongoose.Schema({ ... })
+ * ```
+ */
+export type PersonSchema = mongoose.Schema<
+  PersonDocument,
+  PersonModel,
+  PersonMethods,
+  PersonQueries
+>;
+
+/**
+ * Mongoose Document type
+ *
+ * Pass this type to the Mongoose Model constructor:
+ * ```
+ * const Person = mongoose.model<PersonDocument, PersonModel>("Person", PersonSchema);
+ * ```
+ */
+export type PersonDocument = mongoose.Document<
+  mongoose.Types.ObjectId,
+  PersonQueries
+> &
+  PersonMethods & {
+    name: string;
+    age: number;
+    pet_ids: mongoose.Types.Array<mongoose.Types.ObjectId>;
+    _id: mongoose.Types.ObjectId;
+    pets: PetDocument[];
+  };
+
+/**
+ * Lean version of PetDocument
+ *
+ * This has all Mongoose getters & functions removed. This type will be returned from `PetDocument.toObject()`. To avoid conflicts with model names, use the type alias `PetObject`.
+ * ```
+ * const petObject = pet.toObject();
+ * ```
+ */
+export type Pet = {
+  name: string;
+  age: number;
+  _id: mongoose.Types.ObjectId;
+};
+
+/**
+ * Lean version of PetDocument (type alias of `Pet`)
+ *
+ * Use this type alias to avoid conflicts with model names:
+ * ```
+ * import { Pet } from "../models"
+ * import { PetObject } from "../interfaces/mongoose.gen.ts"
+ *
+ * const petObject: PetObject = pet.toObject();
+ * ```
+ */
+export type PetObject = Pet;
+
+/**
+ * Mongoose Query type
+ *
+ * This type is returned from query functions. For most use cases, you should not need to use this type explicitly.
+ */
+export type PetQuery = mongoose.Query<any, PetDocument, PetQueries> &
+  PetQueries;
+
+/**
+ * Mongoose Query helper types
+ *
+ * This type represents `PetSchema.query`. For most use cases, you should not need to use this type explicitly.
+ */
+export type PetQueries = {};
+
+export type PetMethods = {};
+
+export type PetStatics = {};
+
+/**
+ * Mongoose Model type
+ *
+ * Pass this type to the Mongoose Model constructor:
+ * ```
+ * const Pet = mongoose.model<PetDocument, PetModel>("Pet", PetSchema);
+ * ```
+ */
+export type PetModel = mongoose.Model<PetDocument, PetQueries> & PetStatics;
+
+/**
+ * Mongoose Schema type
+ *
+ * Assign this type to new Pet schema instances:
+ * ```
+ * const PetSchema: PetSchema = new mongoose.Schema({ ... })
+ * ```
+ */
+export type PetSchema = mongoose.Schema<
+  PetDocument,
+  PetModel,
+  PetMethods,
+  PetQueries
+>;
+
+/**
+ * Mongoose Document type
+ *
+ * Pass this type to the Mongoose Model constructor:
+ * ```
+ * const Pet = mongoose.model<PetDocument, PetModel>("Pet", PetSchema);
+ * ```
+ */
+export type PetDocument = mongoose.Document<
+  mongoose.Types.ObjectId,
+  PetQueries
+> &
+  PetMethods & {
+    name: string;
+    age: number;
+    _id: mongoose.Types.ObjectId;
+  };
+
+/**
  * Check if a property on a document is populated:
  * ```
  * import { IsPopulated } from "../interfaces/mongoose.gen.ts"

@@ -1,5 +1,5 @@
 import mongoose, { Model, Types, Schema } from 'mongoose';
-import { PetDocument, PetModel, PetSchema, PetObject } from "../interfaces/mongoose.gen.ts";
+import { PetDocument, PetModel, PetSchema, PetObject } from "../interfaces/mongoose.gen";
 
 const PetSchema = new Schema({
   name: { type: String, required: true },
