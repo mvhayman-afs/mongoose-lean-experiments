@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "mongoose:generate": "mtgen",
     "test": "jest --runInBand --silent",
     "test:prof": "node --prof node_modules/.bin/jest --runInBand --silent"
   },
@@ -15,6 +16,7 @@
     "jest": "^29.7.0",
     "mongodb": "^6.9.0",
     "mongoose": "^8.7.1",
+    "mongoose-tsgen": "^9.4.4",
     "sinon": "^19.0.2",
     "ts-jest": "^29.2.5"
   },
