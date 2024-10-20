@@ -12,7 +12,8 @@ PersonSchema.virtual('pets', {
   localField: 'pet_ids',
   foreignField: '_id',
 }).get(function(this: PetDocument[]) {
-  return this;
+  // console.log(this);
+  return this.pets;
 });
 
 export const Person = mongoose.model<PersonDocument, PersonModel>("Person", PersonSchema);

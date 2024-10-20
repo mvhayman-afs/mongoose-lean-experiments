@@ -6,4 +6,4 @@ const PetSchema = new Schema({
   age: { type: Number, required: true }
 }, { strict: 'throw' });
 
-export const Person = mongoose.model<PetDocument, PetModel>("Pet", PetSchema);
+export const Pet = mongoose.model<PetDocument, PetModel>("Pet", PetSchema);

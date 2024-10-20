@@ -1,58 +1,12 @@
-import mongoose, { Types, Schema, Document, Model } from 'mongoose';
+import mongoose from 'mongoose';
+import { Person } from '../src/models/person';
+import { Pet } from '../src/models/pet';
 
 // MongoDB connection URI (replace with your local MongoDB URI)
 const mongoURI = 'mongodb://localhost:27017/test_db';
 
-interface IPet extends Document {
-  _id: Types.ObjectId;
-  id: string;
-  name: string;
-  age: number;
-}
-
-interface IPerson extends Document {
-  _id: Types.ObjectId;
-  id: string;
-  name: string;
-  age: number;
-  pet_ids: Types.ObjectId; // virtual
-  pets: IPet[]; // virtual
-}
-
-type THydratedPetDocument = {
-  pets?: mongoose.Types.DocumentArray<IPet>;
-}
-
-type PersonModelType = mongoose.Model<IPerson, {}, {}, {}, THydratedPetDocument>;
-let PersonModel: PersonModelType;
-let PetModel: Model<IPet>;
-
 beforeAll(async () => {
   await mongoose.connect(mongoURI, {});
-
-  // Define a simple schema
-  const personSchema = new Schema<IPerson>({
-    name: { type: String, required: true },
-    age: { type: Number, required: true },
-    pet_ids: [{ type: Types.ObjectId, ref: 'Pet', required: true }]
-  }, { strict: 'throw' });
-  personSchema.virtual('pets', {
-    ref: 'Pet',
-    localField: 'pet_ids',
-    foreignField: '_id',
-  });
-
-  PersonModel = mongoose.model<IPerson, PersonModelType>('Person', personSchema);
-
-  // now this works
-  // const person = new PersonModel({ name: 'Alice', age: 30, pet_ids: [pet] });
-  // person.pets?.map(person => { person.save() });
-
-  const petSchema = new Schema<IPet>({
-    name: { type: String, required: true },
-    age: { type: Number, required: true }
-  }, { strict: 'throw' });
-  PetModel = mongoose.model<IPet>('Pet', petSchema);
 });
 
 afterAll(async () => {
@@ -61,13 +15,13 @@ afterAll(async () => {
 });
 
 it('should save a document to MongoDB', async () => {
-  const pet = new PetModel({ name: 'Stain', age: 1 });
+  const pet = new Pet({ name: 'Stain', age: 1 });
   await pet.save()
 
   console.log('pet', pet);
 
   // why isn't this type safe?
-  const person = new PersonModel({ name: 'Alice', age: 30, pet_ids: [pet] });
+  const person = new Person({ name: 'Alice', age: 30, pet_ids: [pet] });
 
   console.log('pets before', person.name, person.pets, person.pet_ids);
 
@@ -86,11 +40,12 @@ it('should save a document to MongoDB', async () => {
 
   const objectDoc = person.toObject();
 
-  const hydratedDoc = await PersonModel.findOne({ _id: _id }).populate('pets').orFail();
+  const hydratedDoc = await Person.findOne({ _id: _id }).populate('pets', 'name').orFail();
 
   console.log('hydrated doc pets', hydratedDoc.pets);
+  console.log('hydrated doc pets', hydratedDoc.pets, hydratedDoc.pets[0].age);
 
-  const leanDoc = await PersonModel.findOne({ _id: _id }).populate('pets').orFail().lean({ virtuals: true });
+  const leanDoc = await Person.findOne({ _id: _id }).populate('pets').orFail().lean({ virtuals: true });
 
   console.log('**leaned', leanDoc._id, leanDoc.id, leanDoc.pets);
 
