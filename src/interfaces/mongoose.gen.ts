@@ -18,7 +18,7 @@ import mongoose from "mongoose";
 export type Person = {
   name: string;
   age: number;
-  pet_ids: mongoose.Types.ObjectId[];
+  pets: (Pet["_id"] | Pet)[];
   _id: mongoose.Types.ObjectId;
 };
 
@@ -95,9 +95,8 @@ export type PersonDocument = mongoose.Document<
   PersonMethods & {
     name: string;
     age: number;
-    pet_ids: mongoose.Types.Array<mongoose.Types.ObjectId>;
+    pets: mongoose.Types.Array<PetDocument["_id"] | PetDocument>;
     _id: mongoose.Types.ObjectId;
-    pets: PetDocument[];
   };
 
 /**

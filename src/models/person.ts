@@ -4,9 +4,10 @@ import { PersonDocument, PetDocument, PersonModel, PersonSchema, PersonObject } 
 const PersonSchema = new Schema({
   name: { type: String, required: true },
   age: { type: Number, required: true },
-  pet_ids: [{ type: Types.ObjectId, required: true }]
+  pets: [{ type: Types.ObjectId, ref: 'Pet', required: true }]
 }, { strict: 'throw' });
 
+/*
 PersonSchema.virtual('pets', {
   ref: 'Pet',
   localField: 'pet_ids',
@@ -15,5 +16,6 @@ PersonSchema.virtual('pets', {
   // console.log(this);
   return this.pets;
 });
+*/
 
 export const Person = mongoose.model<PersonDocument, PersonModel>("Person", PersonSchema);
