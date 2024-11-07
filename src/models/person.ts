@@ -1,25 +1,27 @@
 import mongoose, { Model, Types, Schema } from 'mongoose';
 import { PersonDocument, PetDocument, PersonModel, PersonSchema, PersonObject } from "../interfaces/mongoose.gen";
 
+export interface Person {
+  name: string;
+  age: number;
+  pet_ids: mongoose.Types.ObjectId[];
+  pets?: PetDocument[];
+}
+
 const schemaDefinition = {
   name: { type: String, required: true },
   age: { type: Number, required: true },
-  pets: [{ type: Types.ObjectId, ref: 'Pet', required: true }]
+  pet_ids: { type: [Schema.Types.ObjectId], ref: 'Pet', required: true }
 } as const;
 
-const PersonSchema = new Schema(schemaDefinition, { strict: 'throw' });
+const PersonSchema = new Schema<Person>(schemaDefinition, { strict: 'throw' });
 
-/*
 PersonSchema.virtual('pets', {
   ref: 'Pet',
   localField: 'pet_ids',
   foreignField: '_id',
-}).get(function(this: PetDocument[]) {
-  // console.log(this);
-  return this.pets;
 });
-*/
 
-export const Person = mongoose.model<PersonDocument, PersonModel>("Person", PersonSchema);
+export const Person = mongoose.model("Person", PersonSchema);
 
 export type RawPersonDocType = mongoose.InferRawDocType<typeof schemaDefinition>;

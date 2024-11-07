@@ -22,7 +22,7 @@ it('should save a document to MongoDB', async () => {
   console.log('pet', pet);
 
   // why isn't this type safe?
-  const person = new Person({ name: 'Alice', age: 30, pets: [pet] });
+  const person = new Person({ name: 'Alice', age: 30, pet_ids: [pet] });
 
   console.log('pets before', person.name, person.pets, person.pets);
 
@@ -41,7 +41,7 @@ it('should save a document to MongoDB', async () => {
 
   const objectDoc = person.toObject();
 
-  const hydratedDoc = await Person.findOne({ _id: _id }).populate('pets', 'age').orFail();
+  const hydratedDoc = await Person.findOne({ _id: _id }).populate<{ pets: PetObject[] }>('pets', 'age').orFail() as unknown as Person;
 
   console.log('hydrated doc pets', hydratedDoc.pets, hydratedDoc.pets[0].age);
 
@@ -51,7 +51,9 @@ it('should save a document to MongoDB', async () => {
 
   // class LeanPet extends PetObject {}
 
-  const leanDoc = await Person.findOne({ _id: _id }).populate('pets').orFail().lean({ virtuals: true });
+  const leanDoc = await Person.findOne({ _id: _id }).populate<{ pets: PetObject[] }>('pets').orFail().lean<Person>({ virtuals: true });
+
+  console.log('leanDoc', leanDoc);
 
   if (!(leanDoc.pets[0] instanceof Types.ObjectId)) {
     console.log('NOT INSTANCE', leanDoc.pets[0].age);
