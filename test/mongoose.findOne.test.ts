@@ -34,7 +34,7 @@ beforeAll(async () => {
   const personSchema = new Schema<IPerson>({
     name: { type: String, required: true },
     age: { type: Number, required: true },
-    pet_ids: [{ type: Types.ObjectId, ref: 'Pet', required: true }]
+    pets: [{ type: Types.ObjectId, ref: 'Pet', required: true }]
   }, { strict: 'throw' });
   personSchema.virtual('pets', {
     ref: 'Pet',
